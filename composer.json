@@ -1,0 +1,14 @@
+{
+  "name": "mohammad/mvc_project",
+  "autoload": {
+    "psr-4": {
+      "APP\\": "app/"
+    },
+    "files": [
+      "app/helper.php"
+    ]
+  },
+  "require": {
+    "vlucas/phpdotenv": "^5.5"
+  }
+}
