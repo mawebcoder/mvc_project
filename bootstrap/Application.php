@@ -10,7 +10,6 @@ class Application
     public function __construct()
     {
         $this->registerRoutes();
-
     }
 
     public function registerRoutes(): Route
