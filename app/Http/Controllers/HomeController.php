@@ -17,8 +17,6 @@ class HomeController
      */
     public function index()
     {
-        $name = 'javad';
 
-        view('welcome', compact('name'));
     }
 }
