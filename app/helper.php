@@ -46,3 +46,25 @@ if (!function_exists('back')) {
         throw new Exception('route not found');
     }
 }
+
+if (!function_exists('view')) {
+    /**
+     * @throws Exception
+     */
+    function view(string $view, $data = []): void
+    {
+        $view = str_replace(".", '/', $view);
+
+        $viewPath = __DIR__ . "/../resource/view/" . $view . '.php';
+
+        if (!file_exists($viewPath)) {
+            throw new Exception('view not found');
+        }
+
+        if (count($data)) {
+            extract($data);
+        }
+
+        require_once $viewPath;
+    }
+}

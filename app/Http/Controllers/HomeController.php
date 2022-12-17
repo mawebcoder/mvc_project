@@ -2,6 +2,8 @@
 
 namespace APP\Http\Controllers;
 
+use Exception;
+
 class HomeController
 {
 
@@ -10,8 +12,13 @@ class HomeController
         echo "name controller in HomeController";
     }
 
+    /**
+     * @throws Exception
+     */
     public function index()
     {
-        redirect('https://digikala.com');
+        $name = 'javad';
+
+        view('welcome', compact('name'));
     }
 }
