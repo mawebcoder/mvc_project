@@ -10,8 +10,8 @@ class TestController
         echo "index method in TestController";
     }
 
-    public function name($id)
+    public function name()
     {
-        echo "name method in TestController-$id";
+        echo "name method in TestController";
     }
 }

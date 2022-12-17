@@ -10,8 +10,8 @@ class HomeController
         echo "name controller in HomeController";
     }
 
-    public function index($id)
+    public function index()
     {
-        echo 'index method in HomeController';
+        redirect('https://digikala.com');
     }
 }
