@@ -10,9 +10,9 @@ class Application
 
     public function __construct()
     {
-        $this->registerRoutes();
-
         $this->registerDotEnv();
+
+        $this->registerRoutes();
     }
 
     public function registerRoutes(): Route

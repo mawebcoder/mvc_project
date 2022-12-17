@@ -10,13 +10,14 @@ if (!function_exists('env')) {
 if (!function_exists('getConfigFile')) {
     function getConfigFile(string $configFileName): array|null
     {
-        $configFileAddress = __DIR__ . "/../config/" . $configFileName . '.php';
+        $configFileAddress = $_SERVER['DOCUMENT_ROOT'] . "/../config/" . $configFileName . '.php';
 
         if (!file_exists($configFileAddress)) {
             return null;
         }
 
-        return require_once $configFileAddress;
+
+        return require $configFileAddress;
     }
 }
 
@@ -55,7 +56,7 @@ if (!function_exists('view')) {
     {
         $view = str_replace(".", '/', $view);
 
-        $viewPath = __DIR__ . "/../resource/view/" . $view . '.php';
+        $viewPath = $_SERVER['DOCUMENT_ROOT'] . "/../resource/view/" . $view . '.php';
 
         if (!file_exists($viewPath)) {
             throw new Exception('view not found');
@@ -65,6 +66,34 @@ if (!function_exists('view')) {
             extract($data);
         }
 
+        require_once $viewPath;
+    }
+}
+
+if (!function_exists('asset')) {
+    function asset(string $path): string
+    {
+        return getConfigFile('app')['url'] . DIRECTORY_SEPARATOR . $path;
+    }
+}
+
+if (!function_exists('extendView')) {
+    /**
+     * @throws Exception
+     */
+    function extendView(string $viewAddress, $data = [])
+    {
+        $view = str_replace(".", '/', $viewAddress);
+
+        $viewPath = $_SERVER['DOCUMENT_ROOT'] . "/../resource/view/" . $view . '.php';
+
+        if (!file_exists($viewPath)) {
+            throw new Exception('view not found');
+        }
+
+        if (count($data)) {
+            extract($data);
+        }
         require_once $viewPath;
     }
 }
