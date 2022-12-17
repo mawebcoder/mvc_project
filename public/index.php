@@ -1,8 +1,11 @@
 <?php
 
+
+
+ini_set('display_errors', '1');
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
-const ENV_PATH = __DIR__ . '/..';
+require_once __DIR__ . '/../bootstrap/Application.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(ENV_PATH);
-$dotenv->load();
+new \bootstrap\Application();
