@@ -73,4 +73,48 @@ abstract class Model
 
         self::$connection->exec('SET CHARACTER SET UTF8');
     }
+
+    public static function delete($id): void
+    {
+        self::setConnection();
+
+        $table = static::getTableName();
+
+        $query = "delete from $table where id=?";
+
+        $stmt = self::$connection->prepare($query);
+
+        $stmt->bindValue(1, $id);
+
+        $stmt->execute();
+    }
+
+    public static function create($values)
+    {
+        self::setConnection();
+
+        $table = static::getTableName();
+
+        $fields = join(',', array_keys($values));
+
+        $values = array_values($values);
+
+        $valueBindValue = "";
+        foreach (range(1, count($values)) as $key => $value) {
+            $key + 1 !== count($values) ?
+                $valueBindValue .= "?," : $valueBindValue .= "?";
+        }
+
+
+        $query = "insert into $table ($fields) values($valueBindValue)";
+
+
+        $stmt = self::$connection->prepare($query);
+
+        foreach ($values as $key => $value) {
+            $stmt->bindValue($key + 1, $value);
+        }
+
+        $stmt->execute();
+    }
 }
