@@ -89,7 +89,7 @@ abstract class Model
         $stmt->execute();
     }
 
-    public static function create($values)
+    public static function create($values): void
     {
         self::setConnection();
 
@@ -105,7 +105,6 @@ abstract class Model
                 $valueBindValue .= "?," : $valueBindValue .= "?";
         }
 
-
         $query = "insert into $table ($fields) values($valueBindValue)";
 
 
@@ -114,6 +113,38 @@ abstract class Model
         foreach ($values as $key => $value) {
             $stmt->bindValue($key + 1, $value);
         }
+
+        $stmt->execute();
+    }
+
+    public static function update($id, $values): void
+    {
+        self::setConnection();
+
+        $table = static::getTableName();
+
+        $binds = '';
+
+        $fields = array_keys($values);
+
+        foreach ($fields as $key => $field) {
+            $key + 1 !== count($fields) ?
+                $binds .= $field . "=?," :
+                $binds .= $field . "=?";
+        }
+
+        $query = "update $table set $binds where id=?";
+
+
+        $stmt = self::$connection->prepare($query);
+
+        $values = array_values($values);
+        foreach ($values as $key => $value) {
+
+            $stmt->bindValue($key + 1, $value);
+        }
+
+        $stmt->bindValue(count($values) + 1, $id);
 
         $stmt->execute();
     }
