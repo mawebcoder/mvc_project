@@ -2,7 +2,7 @@
 
 namespace System;
 
-class Router
+class Route
 {
 
     public static array $routes = [
@@ -18,7 +18,7 @@ class Router
             'name' => $routeName,
             'controller' => $action[0],
             'method' => $action[1],
-            "uri" => $uri
+            "uri" => trim($uri, '/')
         ];
     }
 
@@ -28,7 +28,7 @@ class Router
             'name' => $routeName,
             'controller' => $action[0],
             'method' => $action[1],
-            "uri" => $uri
+            "uri" => trim($uri, '/')
         ];
     }
 
@@ -38,7 +38,7 @@ class Router
             'name' => $routeName,
             'controller' => $action[0],
             'method' => $action[1],
-            "uri" => $uri
+            "uri" => trim($uri, '/')
         ];
     }
 
@@ -48,7 +48,7 @@ class Router
             'name' => $routeName,
             'controller' => $action[0],
             'method' => $action[1],
-            "uri" => $uri
+            "uri" => trim($uri, '/')
         ];
     }
 
