@@ -1,16 +1,16 @@
 <?php
 
-use System\Router;
+use System\Route;
 use App\Http\Controller\UserController;
 
-Router::get('/users', [UserController::class, 'index']);
+Route::get('/users', [UserController::class, 'index']);
 
-Router::get('/users/edit/{id}', [UserController::class, 'edit']);
+Route::get('/users/edit/{id}', [UserController::class, 'edit']);
 
-Router::post('/users', [UserController::class, 'post']);
+Route::post('/users', [UserController::class, 'store']);
 
-Router::get('/users/create', [UserController::class, 'create']);
+Route::get('/users/create', [UserController::class, 'create']);
 
-Router::put('/users/{id}', [UserController::class, 'update']);
+Route::put('/users/{id}', [UserController::class, 'update']);
 
-Router::delete('/users/{id}', [UserController::class, 'delete']);
+Route::delete('/users/{id}', [UserController::class, 'delete']);
