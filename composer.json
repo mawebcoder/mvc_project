@@ -2,7 +2,8 @@
   "name": "mohammad/mvc_project",
   "autoload": {
     "psr-4": {
-      "APP\\": "app/"
+      "App\\": "app/",
+      "System\\": "/system/"
     },
     "files": [
       "app/helper.php"
