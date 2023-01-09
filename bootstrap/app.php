@@ -17,7 +17,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../route/web.php';
 
 
-header('Content-Type:application/json',true,201);
+
 
 
 

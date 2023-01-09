@@ -11,9 +11,15 @@ class Routing
 
     public array $values;
 
+    private const HTTP_VERB_GET = 'get';
+    private const HTTP_VERB_POST = 'post';
+    private const HTTP_VERB_PUT = 'put';
+    private const HTTP_VERB_DELETE = 'delete';
+    private const HTTP_VERB_PATCH = 'patch';
+
     public function __set(string $name, $value): void
     {
-        $this->values[$name]=$value;
+        $this->values[$name] = $value;
     }
 
     public function __get(string $name)
@@ -32,22 +38,36 @@ class Routing
         $this->parameters = $this->getRequestedRouteParameters();
     }
 
-    private function gerRequestedRoute():string
+    private function gerRequestedRoute(): string
     {
-        return 'string';
+        return explode('?', $_SERVER['REQUEST_URI'])[0];
     }
 
-    private function getRoutes():array
+    private function getRoutes(): array
     {
         return Route::$routes;
     }
 
-    private function getRequestedHttpVerb():string
+    private function getRequestedHttpVerb(): string
     {
-        return 'GET';
+        $httpVerb = strtolower($_SERVER['REQUEST_METHOD']);
+
+        if ($httpVerb === self::HTTP_VERB_GET) {
+            return $httpVerb;
+        }
+
+        if (!isset($_POST['_method'])) {
+            return $httpVerb;
+        }
+
+        return match (strtolower($_POST['_method'])) {
+            self::HTTP_VERB_PUT => self::HTTP_VERB_PUT,
+            self::HTTP_VERB_DELETE => self::HTTP_VERB_DELETE,
+            default => self::HTTP_VERB_PATCH
+        };
     }
 
-    private function getRequestedRouteParameters():array
+    private function getRequestedRouteParameters(): array
     {
         return [];
     }
