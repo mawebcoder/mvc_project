@@ -1,6 +1,6 @@
 <?php
 
-namespace System;
+
 
 class Routing
 {
@@ -57,7 +57,7 @@ class Routing
         }
 
         if (!isset($_POST['_method'])) {
-            return $httpVerb;
+            return self::HTTP_VERB_POST;
         }
 
         return match (strtolower($_POST['_method'])) {
@@ -70,5 +70,13 @@ class Routing
     private function getRequestedRouteParameters(): array
     {
         return [];
+    }
+
+    public function error404()
+    {
+        http_response_code(404);
+
+        require_once __DIR__.'/../resources/views/errors/404.php';
+        exit();
     }
 }
