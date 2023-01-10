@@ -1,7 +1,6 @@
 <?php
 
 
-
 class Routing
 {
     private string $requestedRoute;
@@ -29,7 +28,7 @@ class Routing
 
     public function __construct()
     {
-        $this->requestedRoute = $this->gerRequestedRoute();
+        $this->requestedRoute = $this->getRequestedRoute();
 
         $this->definedRoutes = $this->getRoutes();
 
@@ -38,9 +37,9 @@ class Routing
         $this->parameters = $this->getRequestedRouteParameters();
     }
 
-    private function gerRequestedRoute(): string
+    private function getRequestedRoute(): string
     {
-        return explode('?', $_SERVER['REQUEST_URI'])[0];
+        return trim(trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/'));
     }
 
     private function getRoutes(): array
@@ -76,7 +75,56 @@ class Routing
     {
         http_response_code(404);
 
-        require_once __DIR__.'/../resources/views/errors/404.php';
+        require_once __DIR__ . '/../resources/views/errors/404.php';
         exit();
+    }
+
+    public function run()
+    {
+    }
+
+    public function match()
+    {
+    }
+
+    public function isRequestedRouteExistsInReservedRoute(string $reservedRoute): bool
+    {
+        $reservedRoute = trim(trim($reservedRoute, '/'));
+        /**
+         * user requested the home page
+         */
+        if (empty($reservedRoute) && empty($this->requestedRoute)) {
+            return true;
+        }
+
+        if (empty(trim(trim($reservedRoute, '/')))) {
+            return false;
+        }
+
+        $explodedRequestedRoute = explode('/', $this->requestedRoute);
+        $explodedReservedRoute = explode('/', $reservedRoute);
+
+        if (count($explodedRequestedRoute) !== count($explodedReservedRoute)) {
+            return false;
+        }
+
+        foreach ($explodedRequestedRoute as $index => $value) {
+            $sameIndexValueInReservedRoute = $explodedReservedRoute[$index];
+
+            /**
+             * detect that is a variable
+             */
+            if (preg_match('/^[{].+}$/', $value)) {
+                $parameterName = substr($value, 1, count(str_split($value)) - 2);
+                $this->parameters[$parameterName] = $value;
+                continue;
+            }
+
+            if ($sameIndexValueInReservedRoute !== $value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
