@@ -74,11 +74,11 @@ class Routing
             return $httpVerb;
         }
 
-        if (!isset($_POST['_method'])) {
+        if (Request::hasKey('_method') === false && $this->requestedHttpVerb === self::HTTP_VERB_POST) {
             return self::HTTP_VERB_POST;
         }
 
-        return match (strtolower($_POST['_method'])) {
+        return match (Request::post('_method')) {
             self::HTTP_VERB_PUT => self::HTTP_VERB_PUT,
             self::HTTP_VERB_DELETE => self::HTTP_VERB_DELETE,
             default => self::HTTP_VERB_PATCH

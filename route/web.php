@@ -3,7 +3,7 @@
 use System\Route;
 use App\Http\Controller\UserController;
 
-Route::get('/users', [UserController::class, 'index']);
+Route::post('/users', [UserController::class, 'index']);
 
 Route::get('/users/edit/{id}', [UserController::class, 'edit']);
 
