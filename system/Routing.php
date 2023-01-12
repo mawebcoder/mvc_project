@@ -1,5 +1,12 @@
 <?php
 
+namespace System;
+
+use ReflectionClass;
+use System\Route;
+use ReflectionException;
+use ReflectionMethod;
+use Exception;
 
 class Routing
 {
@@ -7,6 +14,7 @@ class Routing
     private array $definedRoutes;
     private string $requestedHttpVerb;
     private array $parameters = [];
+    private int $requiredParameters = 0;
 
     public array $values;
 
@@ -76,19 +84,61 @@ class Routing
         http_response_code(404);
 
         require_once __DIR__ . '/../resources/views/errors/404.php';
+
         exit();
     }
 
-    public function run()
+
+    /**
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    public function run(): void
     {
+        $requestedHttpVerb = $this->requestedHttpVerb;
+
+        $routes = $this->getRoutes()[$this->requestedHttpVerb];
+
+
+        foreach ($routes as $route) {
+            $reservedRoute = $route['uri'];
+            if ($this->isRequestedRouteExistsInReservedRoute($reservedRoute)) {
+                if (!class_exists($route['controller'])) {
+                    throw new Exception('controller not found');
+                }
+                $controllerObject = (new ReflectionClass($route['controller']))->newInstance();
+                $method = $route['method'];
+
+                if (!method_exists($controllerObject, $method)) {
+                    throw new Exception('method not found');
+                }
+
+                $reflectionMethod = new ReflectionMethod($controllerObject, $method);
+
+                $methodRequiredParameters = $reflectionMethod->getNumberOfRequiredParameters();
+
+                if ($methodRequiredParameters > $this->parameters) {
+                    throw new Exception('required parameters not defined');
+                }
+
+                if ($methodRequiredParameters < $this->requiredParameters) {
+                    throw new Exception('the required parameters of the action and route are not same!');
+                }
+
+                call_user_func_array([$controllerObject, $method], $this->parameters);
+
+                return;
+            }
+        }
+
+        $this->error404();
     }
 
-    public function match()
-    {
-    }
 
     public function isRequestedRouteExistsInReservedRoute(string $reservedRoute): bool
     {
+        $this->parameters = [];
+
         $reservedRoute = trim(trim($reservedRoute, '/'));
         /**
          * user requested the home page
@@ -112,13 +162,17 @@ class Routing
             $sameIndexValueInReservedRoute = $explodedReservedRoute[$index];
 
             /**
-             * detect that is a variable
+             * is required parameter
              */
-            if (preg_match('/^[{].+}$/', $value)) {
-                $parameterName = substr($value, 1, count(str_split($value)) - 2);
-                $this->parameters[$parameterName] = $value;
+            if (preg_match('/^[{].+[^?]}$/', $sameIndexValueInReservedRoute)) {
+                $this->parameters[] = $value;
+                $this->requiredParameters += 1;
+                continue;
+            } elseif (preg_match('/^[{].+}$/', $sameIndexValueInReservedRoute)) {
+                $this->parameters[] = $value;
                 continue;
             }
+
 
             if ($sameIndexValueInReservedRoute !== $value) {
                 return false;

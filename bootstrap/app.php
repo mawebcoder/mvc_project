@@ -1,6 +1,7 @@
 <?php
 
 use System\Route;
+use System\Routing;
 
 ini_set('display_errors', 1);
 
@@ -15,6 +16,11 @@ require_once __DIR__ . '/../config/database.php';
  * load define routes routes
  */
 require_once __DIR__ . '/../route/web.php';
+
+
+$routing = new Routing();
+
+$routing->run();
 
 
 

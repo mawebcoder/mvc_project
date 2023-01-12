@@ -9,12 +9,13 @@ class Route
         'get' => [],
         'post' => [],
         'put' => [],
-        'delete' => []
+        'delete' => [],
+        'patch' => []
     ];
 
     public static function get(string $uri, array $action, string $routeName = null): void
     {
-        self::$routes[]['get'] = [
+        self::$routes['get'][] = [
             'name' => $routeName,
             'controller' => $action[0],
             'method' => $action[1],
@@ -24,7 +25,7 @@ class Route
 
     public static function post(string $uri, array $action, string $routeName = null): void
     {
-        self::$routes[]['post'] = [
+        self::$routes['post'][] = [
             'name' => $routeName,
             'controller' => $action[0],
             'method' => $action[1],
@@ -34,7 +35,7 @@ class Route
 
     public static function put(string $uri, array $action, string $routeName = null): void
     {
-        self::$routes[]['put'] = [
+        self::$routes['put'][] = [
             'name' => $routeName,
             'controller' => $action[0],
             'method' => $action[1],
@@ -44,7 +45,7 @@ class Route
 
     public static function delete(string $uri, array $action, string $routeName = null): void
     {
-        self::$routes[]['delete'] = [
+        self::$routes['delete'][] = [
             'name' => $routeName,
             'controller' => $action[0],
             'method' => $action[1],
