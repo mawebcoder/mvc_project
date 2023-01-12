@@ -36,6 +36,8 @@ class Routing
 
     public function __construct()
     {
+        $this->registerRoutes();
+
         $this->requestedRoute = $this->getRequestedRoute();
 
         $this->definedRoutes = $this->getRoutes();
@@ -43,6 +45,15 @@ class Routing
         $this->requestedHttpVerb = $this->getRequestedHttpVerb();
 
         $this->parameters = $this->getRequestedRouteParameters();
+    }
+
+    private function registerRoutes(): void
+    {
+        $files = glob($_SERVER['DOCUMENT_ROOT'] . '/../route/*.php');
+
+        foreach ($files as $file) {
+            require_once $file;
+        }
     }
 
     private function getRequestedRoute(): string

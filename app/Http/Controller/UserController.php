@@ -6,6 +6,7 @@ class UserController
 {
     public function index()
     {
+        return 4;
     }
 
     public function edit($id)
