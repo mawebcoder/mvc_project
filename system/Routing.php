@@ -125,7 +125,21 @@ class Routing
                     throw new Exception('the required parameters of the action and route are not same!');
                 }
 
-                call_user_func_array([$controllerObject, $method], $this->parameters);
+
+                $result = call_user_func_array([$controllerObject, $method], $this->parameters);
+
+                if (gettype($result) === 'object') {
+                    echo $result;
+                    die();
+                }
+
+                if (gettype($result) === 'array') {
+                    echo new Response($result);
+                    die();
+                }
+                if (gettype($result) == 'integer' || gettype($result) == 'string' || gettype($result) == 'boolean') {
+                    echo $result;
+                }
 
                 return;
             }
